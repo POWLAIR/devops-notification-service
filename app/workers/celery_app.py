@@ -33,3 +33,5 @@ celery_app.conf.task_routes = {
 
 print("✅ Celery app initialized")
 
+
+

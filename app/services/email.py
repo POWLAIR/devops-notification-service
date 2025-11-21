@@ -85,3 +85,5 @@ class EmailService:
             logger.error(f"❌ Error sending welcome email: {e}")
             raise
 
+
+

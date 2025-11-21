@@ -38,3 +38,5 @@ class Notification(Base):
     def __repr__(self):
         return f"<Notification {self.id} - {self.type} - {self.status}>"
 
+
+

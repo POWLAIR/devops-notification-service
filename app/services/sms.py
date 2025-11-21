@@ -42,3 +42,5 @@ class SMSService:
         message = f"Votre commande #{order_number} a été confirmée. Montant: {total}€. Merci !"
         return self.send_sms(to_number, message)
 
+
+
