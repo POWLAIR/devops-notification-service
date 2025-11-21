@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 40px 30px;
+            border: 1px solid #e0e0e0;
+        }
+        .welcome-box {
+            background-color: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .features {
+            margin: 30px 0;
+        }
+        .feature {
+            padding: 15px;
+            margin: 10px 0;
+            background-color: white;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎉 Bienvenue !</h1>
+        <p>{{ tenant.name }}</p>
+    </div>
+    
+    <div class="content">
+        <div class="welcome-box">
+            <h2>Bonjour {{ user.name }} !</h2>
+            <p>Nous sommes ravis de vous accueillir sur <strong>{{ tenant.name }}</strong>.</p>
+            <p>Votre compte a été créé avec succès et vous pouvez dès maintenant profiter de tous nos services.</p>
+        </div>
+        
+        <div class="features">
+            <h3>Découvrez ce que vous pouvez faire :</h3>
+            
+            <div class="feature">
+                <strong>🛒 Commander en ligne</strong>
+                <p>Parcourez notre catalogue et passez vos commandes en quelques clics.</p>
+            </div>
+            
+            <div class="feature">
+                <strong>📦 Suivre vos commandes</strong>
+                <p>Suivez l'état de vos commandes en temps réel.</p>
+            </div>
+            
+            <div class="feature">
+                <strong>👤 Gérer votre profil</strong>
+                <p>Personnalisez vos informations et préférences.</p>
+            </div>
+        </div>
+        
+        <p style="text-align: center;">
+            <a href="{{ tenant.url }}/login" class="button">
+                Accéder à mon compte
+            </a>
+        </p>
+        
+        <p style="margin-top: 30px;">
+            Si vous avez des questions ou besoin d'aide, notre équipe est à votre disposition.
+        </p>
+    </div>
+    
+    <div class="footer">
+        <p><strong>{{ tenant.name }}</strong></p>
+        <p>{{ tenant.email }}</p>
+        <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+    </div>
+</body>
+</html>
+

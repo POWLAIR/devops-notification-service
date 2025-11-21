@@ -1,6 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import logging
+
+from app.api.routes import notifications
+from app.database.session import init_db
+
+# Configuration logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Notification Service",
@@ -17,34 +28,38 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialisation au démarrage"""
+    logger.info("🚀 Starting Notification Service...")
+    try:
+        init_db()
+        logger.info("✅ Database initialized")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize database: {e}")
+
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
     return {
         "status": "ok",
-        "service": "notification-service"
+        "service": "notification-service",
+        "version": "1.0.0"
     }
 
-@app.post("/notifications/order-confirmation")
-async def send_order_confirmation():
-    """Envoyer email de confirmation de commande"""
-    # TODO: Implement with Celery task
-    return {"message": "Order confirmation email queued"}
 
-@app.post("/notifications/welcome-email")
-async def send_welcome_email():
-    """Envoyer email de bienvenue"""
-    # TODO: Implement with Celery task
-    return {"message": "Welcome email queued"}
+# Include routers
+app.include_router(notifications.router, prefix="/api/v1")
 
-@app.post("/notifications/sms")
-async def send_sms():
-    """Envoyer SMS"""
-    # TODO: Implement with Celery task
-    return {"message": "SMS queued"}
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 6000))
+    logger.info(f"🚀 Starting server on port {port}")
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+
+
 
