@@ -174,3 +174,74 @@ Email de bienvenue avec :
 - **Throughput** : 2K req/s
 - **Workers Celery** : Scalable horizontalement
 - **Mémoire** : ~80MB par worker
+
+## 🚀 Production
+
+### Checklist avant déploiement
+
+- [ ] Clés SendGrid de production configurées (`SENDGRID_API_KEY`)
+- [ ] Clés Twilio de production configurées (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`)
+- [ ] Mot de passe PostgreSQL sécurisé
+- [ ] Redis avec authentification
+- [ ] CORS configuré avec les origines de production uniquement
+- [ ] PostgreSQL avec connexions SSL
+- [ ] HTTPS activé (TLS/SSL)
+- [ ] Email d'expéditeur configuré (`SENDGRID_FROM_EMAIL`)
+- [ ] Numéro de téléphone Twilio configuré (`TWILIO_PHONE_NUMBER`)
+- [ ] Monitoring et alertes (Prometheus, Grafana)
+- [ ] Logs centralisés (ELK, Loki)
+- [ ] Backups automatiques de PostgreSQL
+- [ ] Workers Celery configurés pour la production (nombre de workers, retry policy)
+- [ ] Variables d'environnement configurées sur la plateforme de déploiement
+
+### Variables d'environnement Docker
+
+Configurées dans `docker-compose.yml` :
+```yaml
+DATABASE_URL=postgresql://saas_admin:${DB_PASSWORD}@postgres:5432/saas_platform
+REDIS_URL=redis://redis:6379/0
+CELERY_BROKER_URL=redis://redis:6379/0
+CELERY_RESULT_BACKEND=redis://redis:6379/0
+SENDGRID_API_KEY=${SENDGRID_API_KEY}
+SENDGRID_FROM_EMAIL=${SENDGRID_FROM_EMAIL}
+TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+```
+
+### Déploiement des Workers Celery
+
+En production, déployer séparément :
+- **API FastAPI** : Service principal pour recevoir les requêtes
+- **Celery Worker** : Workers pour traiter les tâches asynchrones
+- **Celery Beat** : Scheduler pour les tâches périodiques (optionnel)
+
+```bash
+# API
+docker run -d --env-file .env notification-service \
+  uvicorn app.main:app --host 0.0.0.0 --port 6000
+
+# Worker
+docker run -d --env-file .env notification-service \
+  celery -A app.workers.celery_app worker --loglevel=info --concurrency=4
+```
+
+## 📝 Notes
+
+- Le service utilise Celery pour le traitement asynchrone des notifications
+- Redis est utilisé comme broker et backend de résultats
+- Les templates HTML sont personnalisables par tenant
+- Le service est conçu pour une architecture microservices
+- Multi-tenant avec isolation par `tenant_id`
+- Retry automatique avec backoff exponentiel en cas d'échec
+
+## 🆘 Support
+
+Pour toute question ou problème, consultez :
+- Logs du service : `docker logs notification-service`
+- Logs Celery : `docker logs notification-worker`
+- Healthcheck : `GET /health` (si disponible)
+- Documentation SendGrid : https://docs.sendgrid.com
+- Documentation Twilio : https://www.twilio.com/docs
+- Documentation Celery : https://docs.celeryproject.org
+- Documentation du projet : [README.md principal](../README.md)

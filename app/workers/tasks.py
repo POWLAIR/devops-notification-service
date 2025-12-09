@@ -27,7 +27,7 @@ def send_order_confirmation_task(self, to_email: str, order_data: dict, tenant_s
         recipient=to_email,
         subject=f"Confirmation de commande #{order_data.get('orderNumber', 'N/A')}",
         content=json.dumps(order_data),
-        metadata=json.dumps(tenant_settings)
+        notification_metadata=json.dumps(tenant_settings)
     )
     db.add(notification)
     db.commit()
@@ -75,7 +75,7 @@ def send_welcome_email_task(self, to_email: str, user_data: dict, tenant_setting
         recipient=to_email,
         subject=f"Bienvenue sur {tenant_settings.get('name', 'notre plateforme')}",
         content=json.dumps(user_data),
-        metadata=json.dumps(tenant_settings)
+        notification_metadata=json.dumps(tenant_settings)
     )
     db.add(notification)
     db.commit()
@@ -130,7 +130,7 @@ def send_sms_task(self, to_number: str, message: str):
         
         notification.status = NotificationStatus.SENT
         notification.sent_at = datetime.utcnow()
-        notification.metadata = json.dumps({"sid": sid})
+        notification.notification_metadata = json.dumps({"sid": sid})
         db.commit()
         
         return {
@@ -176,7 +176,7 @@ def send_order_sms_task(self, to_number: str, order_number: str, total: float):
         
         notification.status = NotificationStatus.SENT
         notification.sent_at = datetime.utcnow()
-        notification.metadata = json.dumps({"sid": sid})
+        notification.notification_metadata = json.dumps({"sid": sid})
         db.commit()
         
         return {

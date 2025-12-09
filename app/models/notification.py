@@ -29,7 +29,7 @@ class Notification(Base):
     recipient = Column(String(255), nullable=False)
     subject = Column(String(500))
     content = Column(Text, nullable=False)
-    metadata = Column(Text)  # JSON string
+    notification_metadata = Column(Text)  # JSON string
     error_message = Column(Text)
     sent_at = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)

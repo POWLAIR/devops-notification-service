@@ -10,8 +10,11 @@ logger = logging.getLogger(__name__)
 class EmailService:
     def __init__(self):
         api_key = os.getenv('SENDGRID_API_KEY')
-        if not api_key:
-            logger.warning("⚠️ SENDGRID_API_KEY not configured")
+        # Détecter les valeurs placeholder ou vides
+        if not api_key or api_key.startswith('SG.DEV_MODE') or api_key.startswith('SG.PLACEHOLDER'):
+            if api_key and not api_key.startswith('SG.DEV_MODE'):
+                # Seulement logger si c'est vraiment vide, pas si c'est un placeholder explicite
+                pass
             self.sg = None
         else:
             self.sg = SendGridAPIClient(api_key)

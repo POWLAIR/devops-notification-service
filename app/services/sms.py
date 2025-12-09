@@ -10,8 +10,14 @@ class SMSService:
         account_sid = os.getenv('TWILIO_ACCOUNT_SID')
         auth_token = os.getenv('TWILIO_AUTH_TOKEN')
         
-        if not account_sid or not auth_token:
-            logger.warning("⚠️ Twilio credentials not configured")
+        # Détecter les valeurs placeholder ou vides
+        is_placeholder = (
+            not account_sid or not auth_token or
+            account_sid.startswith('ACDEV_MODE') or account_sid.startswith('ACPLACEHOLDER') or
+            auth_token.startswith('DEV_MODE') or auth_token.startswith('PLACEHOLDER')
+        )
+        
+        if is_placeholder:
             self.client = None
         else:
             self.client = Client(account_sid, auth_token)
