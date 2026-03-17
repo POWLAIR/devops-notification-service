@@ -85,7 +85,7 @@
             <p><strong>Date :</strong> {{ order.createdAt }}</p>
             <p><strong>Statut :</strong> <span style="color: #10B981;">{{ order.status }}</span></p>
             
-            {% if order.items %}
+            {% if 'items' in order and order.items %}
             <div style="margin-top: 20px;">
                 <strong>Articles :</strong>
                 {% for item in order.items %}
