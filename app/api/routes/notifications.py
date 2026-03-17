@@ -116,6 +116,21 @@ async def send_order_sms(request: OrderSMSRequest):
         raise HTTPException(status_code=500, detail=f"Failed to queue SMS: {str(e)}")
 
 
+@router.get("/unread-count")
+async def get_unread_count(
+    tenant_id: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """Retourne le nombre de notifications non traitées (PENDING + QUEUED)"""
+    query = db.query(func.count(Notification.id)).filter(
+        Notification.status.in_([NotificationStatus.PENDING, NotificationStatus.QUEUED])
+    )
+    if tenant_id:
+        query = query.filter(Notification.tenant_id == tenant_id)
+    count = query.scalar() or 0
+    return {"count": count}
+
+
 @router.get("/history")
 async def get_notifications_history(
     tenant_id: Optional[str] = None,
